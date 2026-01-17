@@ -15,6 +15,9 @@
 - Use standard `tk.Canvas` for pixel art drawing inside CTkFrame
 - CTkProgressBar uses `set(value)` with 0.0-1.0 range
 - Pet state schema: name, level, current_xp, evolution_stage
+- CTkScrollableFrame provides scrollable container for dynamic content
+- CTkFont supports `overstrike=True` for strikethrough text effect
+- Task widgets stored in dict keyed by ID for efficient updates/removal
 
 ---
 
@@ -62,4 +65,17 @@
   - Color manipulation helpers (`_darken_color`, `_lighten_color`) use hex parsing
   - `update_pet_display()` method refreshes all pet-related UI elements
   - Evolution sprites defined as list of (x, y, color_type) tuples for pixel positions
+---
+
+## Iteration 5 - US-005: Task list display
+- What was implemented: Scrollable task list with visual task items, completion status indicators, and empty state handling
+- Files changed: main.py (added `_load_tasks()`, `_refresh_task_list()`, `_create_task_item()` methods; replaced task container with CTkScrollableFrame)
+- Learnings for future iterations:
+  - Use `CTkScrollableFrame` for scrollable content areas
+  - Task items stored in `self.task_widgets` dict keyed by task ID for easy updates
+  - Completed tasks use strikethrough font: `ctk.CTkFont(size=14, overstrike=True)`
+  - Completion status shown with ✓ (green) or ○ (gray) symbols
+  - Completed tasks visually dimmed with different text/background colors
+  - `grid_forget()` hides widgets, `grid()` shows them (for empty state toggle)
+  - Tasks loaded from DB ordered by completed ASC, created_at DESC (incomplete first, newest at top)
 ---

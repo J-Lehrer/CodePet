@@ -85,18 +85,18 @@ _None_
 ---
 
 ### US-005: Task list display
-**Priority:** 5  
-**Status:** ❌ Not Started
+**Priority:** 5
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I can see my tasks in a scrollable list.
 
 **Acceptance Criteria:**
-- [ ] Scrollable frame showing all tasks
-- [ ] Each task shows title and completion status
-- [ ] Completed tasks visually distinguished (strikethrough or dimmed)
-- [ ] Empty state message when no tasks exist
-- [ ] App runs without errors
+- [x] Scrollable frame showing all tasks
+- [x] Each task shows title and completion status
+- [x] Completed tasks visually distinguished (strikethrough or dimmed)
+- [x] Empty state message when no tasks exist
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -208,7 +208,7 @@ _None_
 | US-002 | SQLite database and schema | ✅ |
 | US-003 | Main layout with sidebar and content area | ✅ |
 | US-004 | Pet display with placeholder sprite | ✅ |
-| US-005 | Task list display | ❌ |
+| US-005 | Task list display | ✅ |
 | US-006 | Add new task | ❌ |
 | US-007 | Complete task and earn XP | ❌ |
 | US-008 | Leveling system | ❌ |

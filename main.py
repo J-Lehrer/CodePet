@@ -342,7 +342,7 @@ class CodePetApp(ctk.CTk):
         )
         self.content_header.grid(row=0, column=0, padx=20, pady=(20, 10), sticky="w")
 
-        # Task list container (will be populated in US-005)
+        # Task list container
         self.task_container = ctk.CTkFrame(
             self.content_area,
             fg_color="transparent"
@@ -351,14 +351,102 @@ class CodePetApp(ctk.CTk):
         self.task_container.grid_rowconfigure(0, weight=1)
         self.task_container.grid_columnconfigure(0, weight=1)
 
-        # Placeholder for empty state
-        self.empty_state = ctk.CTkLabel(
+        # Scrollable frame for tasks
+        self.task_scrollable = ctk.CTkScrollableFrame(
             self.task_container,
+            fg_color="transparent"
+        )
+        self.task_scrollable.grid(row=0, column=0, sticky="nsew")
+        self.task_scrollable.grid_columnconfigure(0, weight=1)
+
+        # Empty state label (shown when no tasks)
+        self.empty_state = ctk.CTkLabel(
+            self.task_scrollable,
             text="No tasks yet.\nAdd a task to get started!",
             font=ctk.CTkFont(size=14),
             text_color=("gray50", "gray60")
         )
-        self.empty_state.grid(row=0, column=0, pady=50)
+
+        # Dictionary to store task item widgets
+        self.task_widgets = {}
+
+        # Initial load of tasks
+        self._refresh_task_list()
+
+    def _load_tasks(self) -> list:
+        """Load all top-level tasks from database (parent_id is NULL)."""
+        cursor = self.db.execute(
+            "SELECT * FROM tasks WHERE parent_id IS NULL ORDER BY completed ASC, created_at DESC"
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
+    def _refresh_task_list(self):
+        """Refresh the task list display."""
+        # Clear existing task widgets
+        for widget in self.task_widgets.values():
+            widget.destroy()
+        self.task_widgets.clear()
+
+        # Load tasks from database
+        tasks = self._load_tasks()
+
+        if not tasks:
+            # Show empty state
+            self.empty_state.grid(row=0, column=0, pady=50)
+        else:
+            # Hide empty state
+            self.empty_state.grid_forget()
+
+            # Create task items
+            for idx, task in enumerate(tasks):
+                task_widget = self._create_task_item(task, idx)
+                self.task_widgets[task["id"]] = task_widget
+
+    def _create_task_item(self, task: dict, row: int) -> ctk.CTkFrame:
+        """Create a task item widget."""
+        is_completed = bool(task["completed"])
+
+        # Task item frame
+        task_frame = ctk.CTkFrame(
+            self.task_scrollable,
+            fg_color=("gray85", "gray20") if not is_completed else ("gray80", "gray25"),
+            corner_radius=8
+        )
+        task_frame.grid(row=row, column=0, pady=5, sticky="ew")
+        task_frame.grid_columnconfigure(1, weight=1)
+
+        # Completion status indicator
+        status_color = "#4CAF50" if is_completed else ("gray60", "gray50")
+        status_text = "✓" if is_completed else "○"
+        status_label = ctk.CTkLabel(
+            task_frame,
+            text=status_text,
+            font=ctk.CTkFont(size=16),
+            text_color=status_color,
+            width=30
+        )
+        status_label.grid(row=0, column=0, padx=(10, 5), pady=10)
+
+        # Task title - strikethrough effect for completed tasks
+        title_text = task["title"]
+        title_font = ctk.CTkFont(size=14)
+        title_color = ("gray40", "gray70") if is_completed else ("gray10", "gray90")
+
+        title_label = ctk.CTkLabel(
+            task_frame,
+            text=title_text,
+            font=title_font,
+            text_color=title_color,
+            anchor="w"
+        )
+        title_label.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="w")
+
+        # Apply strikethrough styling for completed tasks using overstrike font
+        if is_completed:
+            # Create font with overstrike for strikethrough effect
+            title_label.configure(font=ctk.CTkFont(size=14, overstrike=True))
+
+        return task_frame
 
 
 def main():
