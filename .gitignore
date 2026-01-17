@@ -7,24 +7,63 @@ __pycache__/
 venv/
 env/
 .venv/
+ENV/
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
 
 # Distribution / packaging
 build/
 dist/
 *.egg-info/
+*.egg
+*.whl
 
 # Local database
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
 
 # OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Windows artifacts
+nul
+NUL
 
 # PyInstaller
 *.spec
+
+# Environment variables and secrets
+.env
+.env.*
+*.env
+.envrc
+secrets.*
+credentials.*
+*_secret.*
+*.pem
+*.key
+config.local.*
+
+# Logs
+*.log
+logs/
+
+# Coverage and testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# mypy
+.mypy_cache/
