@@ -104,18 +104,18 @@ _None_
 ---
 
 ### US-006: Add new task
-**Priority:** 6  
-**Status:** ❌ Not Started
+**Priority:** 6
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I can create a new task.
 
 **Acceptance Criteria:**
-- [ ] Add task button visible at top of task list
-- [ ] Clicking opens input dialog or inline entry
-- [ ] Task saved to database on submit
-- [ ] Task list refreshes to show new task
-- [ ] App runs without errors
+- [x] Add task button visible at top of task list
+- [x] Clicking opens input dialog or inline entry
+- [x] Task saved to database on submit
+- [x] Task list refreshes to show new task
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -209,7 +209,7 @@ _None_
 | US-003 | Main layout with sidebar and content area | ✅ |
 | US-004 | Pet display with placeholder sprite | ✅ |
 | US-005 | Task list display | ✅ |
-| US-006 | Add new task | ❌ |
+| US-006 | Add new task | ✅ |
 | US-007 | Complete task and earn XP | ❌ |
 | US-008 | Leveling system | ❌ |
 | US-009 | Subtasks | ❌ |

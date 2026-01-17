@@ -333,14 +333,31 @@ class CodePetApp(ctk.CTk):
         self.content_area.grid_rowconfigure(1, weight=1)
         self.content_area.grid_columnconfigure(0, weight=1)
 
+        # Header frame with title and add button
+        self.header_frame = ctk.CTkFrame(
+            self.content_area,
+            fg_color="transparent"
+        )
+        self.header_frame.grid(row=0, column=0, padx=20, pady=(20, 10), sticky="ew")
+        self.header_frame.grid_columnconfigure(0, weight=1)
+
         # Header for task list
         self.content_header = ctk.CTkLabel(
-            self.content_area,
+            self.header_frame,
             text="Tasks",
             font=ctk.CTkFont(size=24, weight="bold"),
             anchor="w"
         )
-        self.content_header.grid(row=0, column=0, padx=20, pady=(20, 10), sticky="w")
+        self.content_header.grid(row=0, column=0, sticky="w")
+
+        # Add task button
+        self.add_task_btn = ctk.CTkButton(
+            self.header_frame,
+            text="+ Add Task",
+            width=100,
+            command=self._show_add_task_dialog
+        )
+        self.add_task_btn.grid(row=0, column=1, padx=(10, 0))
 
         # Task list container
         self.task_container = ctk.CTkFrame(
@@ -447,6 +464,26 @@ class CodePetApp(ctk.CTk):
             title_label.configure(font=ctk.CTkFont(size=14, overstrike=True))
 
         return task_frame
+
+    def _show_add_task_dialog(self):
+        """Show dialog for adding a new task."""
+        dialog = ctk.CTkInputDialog(
+            text="Enter task title:",
+            title="Add New Task"
+        )
+        task_title = dialog.get_input()
+
+        if task_title and task_title.strip():
+            self._add_task(task_title.strip())
+
+    def _add_task(self, title: str):
+        """Add a new task to the database and refresh the list."""
+        self.db.execute(
+            "INSERT INTO tasks (title) VALUES (?)",
+            (title,)
+        )
+        self.db.commit()
+        self._refresh_task_list()
 
 
 def main():

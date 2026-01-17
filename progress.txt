@@ -18,6 +18,7 @@
 - CTkScrollableFrame provides scrollable container for dynamic content
 - CTkFont supports `overstrike=True` for strikethrough text effect
 - Task widgets stored in dict keyed by ID for efficient updates/removal
+- CTkInputDialog with `get_input()` returns user input string or None if cancelled
 
 ---
 
@@ -78,4 +79,15 @@
   - Completed tasks visually dimmed with different text/background colors
   - `grid_forget()` hides widgets, `grid()` shows them (for empty state toggle)
   - Tasks loaded from DB ordered by completed ASC, created_at DESC (incomplete first, newest at top)
+---
+
+## Iteration 6 - US-006: Add new task
+- What was implemented: Add task button in header with input dialog for creating new tasks
+- Files changed: main.py (added header_frame with add_task_btn, _show_add_task_dialog and _add_task methods)
+- Learnings for future iterations:
+  - `CTkInputDialog` provides simple modal input with `get_input()` returning string or None
+  - Header can contain both title label and button using a transparent frame container
+  - Button `command` parameter takes callable without parentheses
+  - `db.execute()` with params tuple followed by `db.commit()` for INSERT operations
+  - Always strip and validate input before inserting (check for empty/None)
 ---
