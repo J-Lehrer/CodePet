@@ -12,6 +12,9 @@
 - Use `grid_propagate(False)` to keep frame fixed size
 - Fixed column: `grid_columnconfigure(col, weight=0, minsize=N)`, expanding: `weight=1`
 - fg_color tuple provides light/dark theme variants: `("lightColor", "darkColor")`
+- Use standard `tk.Canvas` for pixel art drawing inside CTkFrame
+- CTkProgressBar uses `set(value)` with 0.0-1.0 range
+- Pet state schema: name, level, current_xp, evolution_stage
 
 ---
 
@@ -45,4 +48,18 @@
   - Different fg_color tuples for light/dark mode: `("gray90", "gray17")`
   - Visual separation achieved with different background colors
   - Placeholders left for pet area (US-004) and task list (US-005)
+---
+
+## Iteration 4 - US-004: Pet display with placeholder sprite
+- What was implemented: Canvas-based pet sprite display with pixel art for all evolution stages, pet name label, level display, and XP progress bar
+- Files changed: main.py (added pet sprite drawing, stats display, and helper methods)
+- Learnings for future iterations:
+  - Use standard `tk.Canvas` widget for drawing pixel art (embedded in CTkFrame)
+  - `canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="")` draws filled pixels
+  - Pet state loaded from database via `_load_pet_state()` method
+  - XP formula: `int(50 * (level ** 1.5))` for polynomial curve
+  - `CTkProgressBar.set(value)` sets progress bar value (0.0 to 1.0)
+  - Color manipulation helpers (`_darken_color`, `_lighten_color`) use hex parsing
+  - `update_pet_display()` method refreshes all pet-related UI elements
+  - Evolution sprites defined as list of (x, y, color_type) tuples for pixel positions
 ---

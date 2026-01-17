@@ -66,18 +66,18 @@ _None_
 ---
 
 ### US-004: Pet display with placeholder sprite
-**Priority:** 4  
-**Status:** ❌ Not Started
+**Priority:** 4
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I see my pet displayed in the sidebar.
 
 **Acceptance Criteria:**
-- [ ] Canvas widget in sidebar displays pet sprite
-- [ ] Placeholder pixel art (can be simple colored rectangle initially)
-- [ ] Pet name displayed below sprite
-- [ ] Current level and XP bar shown
-- [ ] App runs without errors
+- [x] Canvas widget in sidebar displays pet sprite
+- [x] Placeholder pixel art (can be simple colored rectangle initially)
+- [x] Pet name displayed below sprite
+- [x] Current level and XP bar shown
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -207,7 +207,7 @@ _None_
 | US-001 | Project scaffolding and app window | ✅ |
 | US-002 | SQLite database and schema | ✅ |
 | US-003 | Main layout with sidebar and content area | ✅ |
-| US-004 | Pet display with placeholder sprite | ❌ |
+| US-004 | Pet display with placeholder sprite | ✅ |
 | US-005 | Task list display | ❌ |
 | US-006 | Add new task | ❌ |
 | US-007 | Complete task and earn XP | ❌ |
