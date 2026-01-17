@@ -9,6 +9,9 @@
 - platformdirs `user_data_dir()` returns platform-specific data directory
 - SQLite WAL mode: `PRAGMA journal_mode=WAL`
 - Use `sqlite3.Row` row_factory for dict-like access to columns
+- Use `grid_propagate(False)` to keep frame fixed size
+- Fixed column: `grid_columnconfigure(col, weight=0, minsize=N)`, expanding: `weight=1`
+- fg_color tuple provides light/dark theme variants: `("lightColor", "darkColor")`
 
 ---
 
@@ -30,4 +33,16 @@
   - Default records auto-created for user_profile and pet_state
   - WAL mode enabled for better concurrent access
   - Foreign keys enabled with ON DELETE CASCADE for subtasks
+---
+
+## Iteration 3 - US-003: Main layout with sidebar and content area
+- What was implemented: Two-column layout with fixed 200px sidebar and responsive content area
+- Files changed: main.py (replaced placeholder with sidebar and content area)
+- Learnings for future iterations:
+  - Use `grid_propagate(False)` on frames to prevent them from shrinking to fit content
+  - For fixed-width columns: `grid_columnconfigure(col, weight=0, minsize=N)`
+  - For expanding columns: `grid_columnconfigure(col, weight=1)`
+  - Different fg_color tuples for light/dark mode: `("gray90", "gray17")`
+  - Visual separation achieved with different background colors
+  - Placeholders left for pet area (US-004) and task list (US-005)
 ---

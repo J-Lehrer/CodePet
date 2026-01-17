@@ -47,18 +47,18 @@ _None_
 ---
 
 ### US-003: Main layout with sidebar and content area
-**Priority:** 3  
-**Status:** ❌ Not Started
+**Priority:** 3
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I see a clean layout with pet display area and task list.
 
 **Acceptance Criteria:**
-- [ ] Left sidebar (200px) for pet display and stats
-- [ ] Main content area for task list
-- [ ] Responsive grid layout that handles window resize
-- [ ] Visual separation between sections
-- [ ] App runs without errors
+- [x] Left sidebar (200px) for pet display and stats
+- [x] Main content area for task list
+- [x] Responsive grid layout that handles window resize
+- [x] Visual separation between sections
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -206,7 +206,7 @@ _None_
 |----|-------|--------|
 | US-001 | Project scaffolding and app window | ✅ |
 | US-002 | SQLite database and schema | ✅ |
-| US-003 | Main layout with sidebar and content area | ❌ |
+| US-003 | Main layout with sidebar and content area | ✅ |
 | US-004 | Pet display with placeholder sprite | ❌ |
 | US-005 | Task list display | ❌ |
 | US-006 | Add new task | ❌ |
