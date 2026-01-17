@@ -143,18 +143,18 @@ _None_
 ---
 
 ### US-008: Leveling system
-**Priority:** 8  
-**Status:** ❌ Not Started
+**Priority:** 8
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I level up when I earn enough XP.
 
 **Acceptance Criteria:**
-- [ ] XP threshold increases per level (polynomial curve)
-- [ ] Level displayed in sidebar updates on level-up
-- [ ] Visual celebration on level-up (text notification minimum)
-- [ ] Level persisted to database
-- [ ] App runs without errors
+- [x] XP threshold increases per level (polynomial curve)
+- [x] Level displayed in sidebar updates on level-up
+- [x] Visual celebration on level-up (text notification minimum)
+- [x] Level persisted to database
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -211,6 +211,6 @@ _None_
 | US-005 | Task list display | ✅ |
 | US-006 | Add new task | ✅ |
 | US-007 | Complete task and earn XP | ✅ |
-| US-008 | Leveling system | ❌ |
+| US-008 | Leveling system | ✅ |
 | US-009 | Subtasks | ❌ |
 | US-010 | Pet evolution stages | ❌ |

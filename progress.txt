@@ -108,3 +108,15 @@
   - Tasks have default `xp_value=10` from database schema
   - Toggle pattern: check current state, update DB, then refresh UI
 ---
+
+## Iteration 8 - US-008: Leveling system
+- What was implemented: Level-up check in _award_xp method with polynomial XP curve, visual level-up celebration notification
+- Files changed: main.py (modified _award_xp method, added _show_level_up_notification method)
+- Learnings for future iterations:
+  - XP threshold formula: `int(50 * (level ** 1.5))` provides good polynomial curve
+  - Level-up check loops to handle multiple level-ups in one XP award
+  - Use while loop to consume XP: `while new_xp >= xp_needed: new_xp -= xp_needed; new_level += 1`
+  - Celebration frame uses gold colors: `fg_color=("#FFD700", "#B8860B")`
+  - Arrow character "→" for showing level transition (L1 → L2)
+  - 2.5 seconds is good duration for level-up celebration (longer than XP notification)
+---

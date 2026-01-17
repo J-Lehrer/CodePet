@@ -521,19 +521,32 @@ class CodePetApp(ctk.CTk):
         self.update_pet_display()
 
     def _award_xp(self, xp_amount: int):
-        """Award XP to the pet and save to database."""
+        """Award XP to the pet, check for level-up, and save to database."""
         # Get current pet state
         cursor = self.db.execute("SELECT * FROM pet_state WHERE id = 1")
         pet = dict(cursor.fetchone())
 
+        current_level = pet["level"]
         new_xp = pet["current_xp"] + xp_amount
+        new_level = current_level
+
+        # Check for level-up(s) - loop in case of multiple level-ups
+        xp_needed = self._calculate_xp_for_level(new_level + 1)
+        while new_xp >= xp_needed:
+            new_xp -= xp_needed
+            new_level += 1
+            xp_needed = self._calculate_xp_for_level(new_level + 1)
 
         # Update pet state in database
         self.db.execute(
-            "UPDATE pet_state SET current_xp = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1",
-            (new_xp,)
+            "UPDATE pet_state SET current_xp = ?, level = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1",
+            (new_xp, new_level)
         )
         self.db.commit()
+
+        # Show level-up celebration if level increased
+        if new_level > current_level:
+            self._show_level_up_notification(current_level, new_level)
 
     def _show_xp_notification(self, xp_amount: int):
         """Show a temporary notification for XP earned."""
@@ -552,6 +565,38 @@ class CodePetApp(ctk.CTk):
 
         # Schedule notification removal after 1.5 seconds
         self.after(1500, notification.destroy)
+
+    def _show_level_up_notification(self, old_level: int, new_level: int):
+        """Show a celebration notification for leveling up."""
+        # Create celebration frame with multiple elements
+        celebration_frame = ctk.CTkFrame(
+            self.content_area,
+            fg_color=("#FFD700", "#B8860B"),  # Gold colors
+            corner_radius=12
+        )
+        celebration_frame.place(relx=0.5, rely=0.3, anchor="center")
+
+        # Level up header
+        header_label = ctk.CTkLabel(
+            celebration_frame,
+            text="🎉 LEVEL UP! 🎉",
+            font=ctk.CTkFont(size=24, weight="bold"),
+            text_color=("#1a1a1a", "#1a1a1a")
+        )
+        header_label.grid(row=0, column=0, padx=30, pady=(20, 5))
+
+        # Level display
+        level_text = f"Level {old_level} → Level {new_level}"
+        level_label = ctk.CTkLabel(
+            celebration_frame,
+            text=level_text,
+            font=ctk.CTkFont(size=18),
+            text_color=("#333333", "#333333")
+        )
+        level_label.grid(row=1, column=0, padx=30, pady=(5, 20))
+
+        # Schedule celebration removal after 2.5 seconds
+        self.after(2500, celebration_frame.destroy)
 
 
 def main():
