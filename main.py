@@ -5,6 +5,7 @@ Launch the application by running: python main.py
 """
 
 import customtkinter as ctk
+from database import get_database
 
 
 class CodePetApp(ctk.CTk):
@@ -12,7 +13,10 @@ class CodePetApp(ctk.CTk):
     
     def __init__(self):
         super().__init__()
-        
+
+        # Initialize database
+        self.db = get_database()
+
         # Window configuration
         self.title("CodePet")
         self.geometry("900x700")

@@ -5,6 +5,10 @@
 - CustomTkinter uses `ctk.set_appearance_mode("Dark")` before creating app instance
 - Window config goes in `__init__`: title(), geometry(), minsize()
 - Grid layout configured with `grid_rowconfigure` and `grid_columnconfigure`
+- Database singleton uses `_instance` class variable with `__new__` override
+- platformdirs `user_data_dir()` returns platform-specific data directory
+- SQLite WAL mode: `PRAGMA journal_mode=WAL`
+- Use `sqlite3.Row` row_factory for dict-like access to columns
 
 ---
 
@@ -15,4 +19,15 @@
   - The initial code was already well-structured following CustomTkinter best practices
   - Use `ctk.set_appearance_mode()` and `ctk.set_default_color_theme()` before creating the app instance
   - Grid layout with weight=1 makes content expand to fill window
+---
+
+## Iteration 2 - US-002: SQLite database and schema
+- What was implemented: Database module with singleton pattern, SQLite storage in user data directory
+- Files changed: database.py (new), main.py (added db initialization)
+- Learnings for future iterations:
+  - Database singleton ensures single connection across app
+  - Tables created: tasks (with parent_id for subtasks), user_profile, pet_state
+  - Default records auto-created for user_profile and pet_state
+  - WAL mode enabled for better concurrent access
+  - Foreign keys enabled with ON DELETE CASCADE for subtasks
 ---

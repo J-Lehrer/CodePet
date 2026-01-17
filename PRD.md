@@ -28,18 +28,18 @@ _None_
 ---
 
 ### US-002: SQLite database and schema
-**Priority:** 2  
-**Status:** ❌ Not Started
+**Priority:** 2
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a developer, I need persistent storage for tasks, user profile, and pet state.
 
 **Acceptance Criteria:**
-- [ ] Database created in user data directory (platformdirs)
-- [ ] Tables: tasks, user_profile, pet_state
-- [ ] Tasks table supports parent_id for subtasks
-- [ ] Database singleton pattern with WAL mode
-- [ ] App runs without errors
+- [x] Database created in user data directory (platformdirs)
+- [x] Tables: tasks, user_profile, pet_state
+- [x] Tasks table supports parent_id for subtasks
+- [x] Database singleton pattern with WAL mode
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -205,7 +205,7 @@ _None_
 | US | Title | Status |
 |----|-------|--------|
 | US-001 | Project scaffolding and app window | ✅ |
-| US-002 | SQLite database and schema | ❌ |
+| US-002 | SQLite database and schema | ✅ |
 | US-003 | Main layout with sidebar and content area | ❌ |
 | US-004 | Pet display with placeholder sprite | ❌ |
 | US-005 | Task list display | ❌ |
