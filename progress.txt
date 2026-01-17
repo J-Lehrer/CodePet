@@ -134,3 +134,15 @@
   - Auto-expand parent when adding subtask improves UX
   - Track column index with variable `col` when building dynamic layouts
 ---
+
+## Iteration 10 - US-010: Pet evolution stages
+- What was implemented: Evolution system with level-based triggers, evolution check on level-up, purple celebration notification
+- Files changed: main.py (added EVOLUTION_LEVELS and EVOLUTION_ORDER constants, _get_evolution_stage_for_level, _check_evolution, _show_evolution_notification methods, integrated evolution check in _award_xp)
+- Learnings for future iterations:
+  - Evolution constants: EVOLUTION_LEVELS maps stage to minimum level, EVOLUTION_ORDER defines progression
+  - Evolution triggers at levels 2 (baby), 5 (child), 10 (teen), 20 (adult)
+  - `self.after(delay, callback)` with lambda captures variables at call time for delayed notifications
+  - Evolution notification delayed by 2600ms to appear after level-up notification (2500ms + 100ms buffer)
+  - Purple color scheme (#9370DB, #6A5ACD) distinguishes evolution from gold level-up notifications
+  - Flavor text dict maps stage names to descriptive messages for evolution celebration
+---

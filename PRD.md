@@ -181,19 +181,19 @@ _None_
 ---
 
 ### US-010: Pet evolution stages
-**Priority:** 10  
-**Status:** ❌ Not Started
+**Priority:** 10
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, my pet evolves when I reach certain levels.
 
 **Acceptance Criteria:**
-- [ ] Pet has evolution stages: egg → baby → child → teen → adult
-- [ ] Evolution triggers at levels 2, 5, 10, 20
-- [ ] Pet appearance changes on evolution (placeholder graphics ok)
-- [ ] Evolution celebration notification
-- [ ] Evolution state persisted
-- [ ] App runs without errors
+- [x] Pet has evolution stages: egg → baby → child → teen → adult
+- [x] Evolution triggers at levels 2, 5, 10, 20
+- [x] Pet appearance changes on evolution (placeholder graphics ok)
+- [x] Evolution celebration notification
+- [x] Evolution state persisted
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -213,4 +213,4 @@ _None_
 | US-007 | Complete task and earn XP | ✅ |
 | US-008 | Leveling system | ✅ |
 | US-009 | Subtasks | ✅ |
-| US-010 | Pet evolution stages | ❌ |
+| US-010 | Pet evolution stages | ✅ |

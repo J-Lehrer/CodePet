@@ -18,6 +18,18 @@ EVOLUTION_COLORS = {
     "adult": "#FFD700",    # Gold
 }
 
+# Evolution level thresholds: stage -> minimum level required
+EVOLUTION_LEVELS = {
+    "egg": 1,      # Starting stage
+    "baby": 2,     # Level 2
+    "child": 5,    # Level 5
+    "teen": 10,    # Level 10
+    "adult": 20,   # Level 20
+}
+
+# Ordered list of evolution stages
+EVOLUTION_ORDER = ["egg", "baby", "child", "teen", "adult"]
+
 # Evolution stage sprite patterns (simple pixel patterns)
 # Each pattern is a list of (x, y, color_key) where coordinates are relative to center
 EVOLUTION_SPRITES = {
@@ -122,6 +134,17 @@ class CodePetApp(ctk.CTk):
         """Calculate XP needed to reach a given level (polynomial curve)."""
         # XP = 50 * level^1.5 (rounded)
         return int(50 * (level ** 1.5))
+
+    def _get_evolution_stage_for_level(self, level: int) -> str:
+        """Get the appropriate evolution stage for a given level."""
+        # Find the highest stage the pet qualifies for based on level
+        current_stage = "egg"
+        for stage in EVOLUTION_ORDER:
+            if level >= EVOLUTION_LEVELS[stage]:
+                current_stage = stage
+            else:
+                break
+        return current_stage
 
     def _create_sidebar(self):
         """Create the left sidebar for pet display and stats."""
@@ -658,6 +681,12 @@ class CodePetApp(ctk.CTk):
         if new_level > current_level:
             self._show_level_up_notification(current_level, new_level)
 
+            # Check for evolution after level-up
+            evolved, old_stage, new_stage = self._check_evolution(new_level)
+            if evolved:
+                # Delay evolution notification to appear after level-up notification
+                self.after(2600, lambda: self._show_evolution_notification(old_stage, new_stage))
+
     def _show_xp_notification(self, xp_amount: int):
         """Show a temporary notification for XP earned."""
         # Create notification label
@@ -707,6 +736,79 @@ class CodePetApp(ctk.CTk):
 
         # Schedule celebration removal after 2.5 seconds
         self.after(2500, celebration_frame.destroy)
+
+    def _check_evolution(self, new_level: int) -> tuple:
+        """Check if pet should evolve based on new level.
+
+        Returns:
+            tuple: (should_evolve: bool, old_stage: str, new_stage: str)
+        """
+        # Get current evolution stage from database
+        cursor = self.db.execute("SELECT evolution_stage FROM pet_state WHERE id = 1")
+        current_stage = cursor.fetchone()[0]
+
+        # Get the stage the pet should be at for this level
+        target_stage = self._get_evolution_stage_for_level(new_level)
+
+        # Check if evolution should occur
+        if target_stage != current_stage:
+            # Update evolution stage in database
+            self.db.execute(
+                "UPDATE pet_state SET evolution_stage = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1",
+                (target_stage,)
+            )
+            self.db.commit()
+            return (True, current_stage, target_stage)
+
+        return (False, current_stage, current_stage)
+
+    def _show_evolution_notification(self, old_stage: str, new_stage: str):
+        """Show a celebration notification for evolution."""
+        # Create evolution celebration frame
+        evolution_frame = ctk.CTkFrame(
+            self.content_area,
+            fg_color=("#9370DB", "#6A5ACD"),  # Purple colors for evolution
+            corner_radius=12
+        )
+        evolution_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+        # Evolution header
+        header_label = ctk.CTkLabel(
+            evolution_frame,
+            text="✨ EVOLUTION! ✨",
+            font=ctk.CTkFont(size=28, weight="bold"),
+            text_color=("#FFFFFF", "#FFFFFF")
+        )
+        header_label.grid(row=0, column=0, padx=40, pady=(25, 10))
+
+        # Stage transition display
+        stage_text = f"{old_stage.capitalize()} → {new_stage.capitalize()}"
+        stage_label = ctk.CTkLabel(
+            evolution_frame,
+            text=stage_text,
+            font=ctk.CTkFont(size=20),
+            text_color=("#E0E0E0", "#E0E0E0")
+        )
+        stage_label.grid(row=1, column=0, padx=40, pady=(5, 10))
+
+        # Flavor text based on new stage
+        flavor_texts = {
+            "baby": "Your pet has hatched!",
+            "child": "Your pet is growing up!",
+            "teen": "Your pet is maturing!",
+            "adult": "Your pet is fully evolved!"
+        }
+        flavor_text = flavor_texts.get(new_stage, "Your pet evolved!")
+        flavor_label = ctk.CTkLabel(
+            evolution_frame,
+            text=flavor_text,
+            font=ctk.CTkFont(size=14),
+            text_color=("#D0D0D0", "#D0D0D0")
+        )
+        flavor_label.grid(row=2, column=0, padx=40, pady=(0, 25))
+
+        # Schedule evolution notification removal after 3 seconds
+        self.after(3000, evolution_frame.destroy)
 
 
 def main():
