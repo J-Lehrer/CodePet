@@ -432,17 +432,21 @@ class CodePetApp(ctk.CTk):
         task_frame.grid(row=row, column=0, pady=5, sticky="ew")
         task_frame.grid_columnconfigure(1, weight=1)
 
-        # Completion status indicator
+        # Completion toggle button (clickable to toggle completion)
         status_color = "#4CAF50" if is_completed else ("gray60", "gray50")
         status_text = "✓" if is_completed else "○"
-        status_label = ctk.CTkLabel(
+        status_btn = ctk.CTkButton(
             task_frame,
             text=status_text,
             font=ctk.CTkFont(size=16),
             text_color=status_color,
-            width=30
+            fg_color="transparent",
+            hover_color=("gray75", "gray30"),
+            width=30,
+            height=30,
+            command=lambda t=task: self._toggle_task_completion(t)
         )
-        status_label.grid(row=0, column=0, padx=(10, 5), pady=10)
+        status_btn.grid(row=0, column=0, padx=(10, 5), pady=10)
 
         # Task title - strikethrough effect for completed tasks
         title_text = task["title"]
@@ -484,6 +488,70 @@ class CodePetApp(ctk.CTk):
         )
         self.db.commit()
         self._refresh_task_list()
+
+    def _toggle_task_completion(self, task: dict):
+        """Toggle task completion status and award XP if completing."""
+        is_completed = bool(task["completed"])
+        task_id = task["id"]
+        xp_value = task.get("xp_value", 10)
+
+        if not is_completed:
+            # Mark task as complete and award XP
+            self.db.execute(
+                "UPDATE tasks SET completed = 1, completed_at = CURRENT_TIMESTAMP WHERE id = ?",
+                (task_id,)
+            )
+            self.db.commit()
+
+            # Award XP to pet
+            self._award_xp(xp_value)
+
+            # Show XP earned notification
+            self._show_xp_notification(xp_value)
+        else:
+            # Uncomplete the task (no XP penalty)
+            self.db.execute(
+                "UPDATE tasks SET completed = 0, completed_at = NULL WHERE id = ?",
+                (task_id,)
+            )
+            self.db.commit()
+
+        # Refresh task list and pet display
+        self._refresh_task_list()
+        self.update_pet_display()
+
+    def _award_xp(self, xp_amount: int):
+        """Award XP to the pet and save to database."""
+        # Get current pet state
+        cursor = self.db.execute("SELECT * FROM pet_state WHERE id = 1")
+        pet = dict(cursor.fetchone())
+
+        new_xp = pet["current_xp"] + xp_amount
+
+        # Update pet state in database
+        self.db.execute(
+            "UPDATE pet_state SET current_xp = ?, updated_at = CURRENT_TIMESTAMP WHERE id = 1",
+            (new_xp,)
+        )
+        self.db.commit()
+
+    def _show_xp_notification(self, xp_amount: int):
+        """Show a temporary notification for XP earned."""
+        # Create notification label
+        notification = ctk.CTkLabel(
+            self.content_area,
+            text=f"+{xp_amount} XP!",
+            font=ctk.CTkFont(size=18, weight="bold"),
+            text_color="#4CAF50",
+            fg_color=("gray85", "gray20"),
+            corner_radius=8,
+            padx=15,
+            pady=8
+        )
+        notification.place(relx=0.5, rely=0.1, anchor="center")
+
+        # Schedule notification removal after 1.5 seconds
+        self.after(1500, notification.destroy)
 
 
 def main():

@@ -123,19 +123,19 @@ _None_
 ---
 
 ### US-007: Complete task and earn XP
-**Priority:** 7  
-**Status:** ❌ Not Started
+**Priority:** 7
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I can mark a task complete and see XP awarded.
 
 **Acceptance Criteria:**
-- [ ] Checkbox or button to mark task complete
-- [ ] Completing task awards XP (default 10)
-- [ ] XP bar updates immediately
-- [ ] Visual/text feedback showing XP earned
-- [ ] Pet state saved to database
-- [ ] App runs without errors
+- [x] Checkbox or button to mark task complete
+- [x] Completing task awards XP (default 10)
+- [x] XP bar updates immediately
+- [x] Visual/text feedback showing XP earned
+- [x] Pet state saved to database
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -210,7 +210,7 @@ _None_
 | US-004 | Pet display with placeholder sprite | ✅ |
 | US-005 | Task list display | ✅ |
 | US-006 | Add new task | ✅ |
-| US-007 | Complete task and earn XP | ❌ |
+| US-007 | Complete task and earn XP | ✅ |
 | US-008 | Leveling system | ❌ |
 | US-009 | Subtasks | ❌ |
 | US-010 | Pet evolution stages | ❌ |

@@ -19,6 +19,10 @@
 - CTkFont supports `overstrike=True` for strikethrough text effect
 - Task widgets stored in dict keyed by ID for efficient updates/removal
 - CTkInputDialog with `get_input()` returns user input string or None if cancelled
+- CTkButton with `fg_color="transparent"` creates clickable text-like button
+- Lambda with default arg `lambda t=task: fn(t)` captures current value in loop
+- `self.after(ms, callback)` schedules callback without blocking UI
+- `widget.place(relx, rely, anchor)` for floating/overlaying notifications
 
 ---
 
@@ -90,4 +94,17 @@
   - Button `command` parameter takes callable without parentheses
   - `db.execute()` with params tuple followed by `db.commit()` for INSERT operations
   - Always strip and validate input before inserting (check for empty/None)
+---
+
+## Iteration 7 - US-007: Complete task and earn XP
+- What was implemented: Clickable completion toggle button, XP award system, visual XP notification
+- Files changed: main.py (changed status_label to status_btn, added _toggle_task_completion, _award_xp, _show_xp_notification methods)
+- Learnings for future iterations:
+  - CTkButton with `fg_color="transparent"` creates a clickable text-like button
+  - Lambda with default argument `lambda t=task: fn(t)` captures current value in loop
+  - `self.after(ms, callback)` schedules callback without blocking UI
+  - `widget.place(relx=0.5, rely=0.1, anchor="center")` for floating notifications
+  - `widget.destroy()` removes widget from UI
+  - Tasks have default `xp_value=10` from database schema
+  - Toggle pattern: check current state, update DB, then refresh UI
 ---
