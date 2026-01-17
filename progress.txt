@@ -120,3 +120,17 @@
   - Arrow character "→" for showing level transition (L1 → L2)
   - 2.5 seconds is good duration for level-up celebration (longer than XP notification)
 ---
+
+## Iteration 9 - US-009: Subtasks
+- What was implemented: Expand/collapse functionality for parent tasks, add subtask button on each task, subtask visual indentation, partial XP (5) for subtasks
+- Files changed: main.py (added _load_subtasks, _has_subtasks, _toggle_task_expand, _show_add_subtask_dialog, _add_subtask methods; modified _refresh_task_list and _create_task_item)
+- Learnings for future iterations:
+  - Use `set()` for tracking expanded tasks (self.expanded_tasks)
+  - `grid_columnconfigure(col, weight=1)` makes a specific column expand
+  - Use `padx=(left_padding, 0)` tuple for left-only indentation
+  - Arrow symbols: "▶" for collapsed, "▼" for expanded
+  - Subtasks use parent_id foreign key already in schema
+  - Subtasks get half XP (5 instead of 10) by specifying xp_value in INSERT
+  - Auto-expand parent when adding subtask improves UX
+  - Track column index with variable `col` when building dynamic layouts
+---

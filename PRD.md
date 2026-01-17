@@ -162,18 +162,18 @@ _None_
 ---
 
 ### US-009: Subtasks
-**Priority:** 9  
-**Status:** ❌ Not Started
+**Priority:** 9
+**Status:** ✅ Complete
 
-**Description:**  
+**Description:**
 As a user, I can add subtasks under a parent task.
 
 **Acceptance Criteria:**
-- [ ] Tasks can be expanded to show subtasks
-- [ ] Add subtask option on each task
-- [ ] Subtasks indented visually under parent
-- [ ] Completing subtask awards partial XP
-- [ ] App runs without errors
+- [x] Tasks can be expanded to show subtasks
+- [x] Add subtask option on each task
+- [x] Subtasks indented visually under parent
+- [x] Completing subtask awards partial XP
+- [x] App runs without errors
 
 **Notes:**  
 _None_
@@ -212,5 +212,5 @@ _None_
 | US-006 | Add new task | ✅ |
 | US-007 | Complete task and earn XP | ✅ |
 | US-008 | Leveling system | ✅ |
-| US-009 | Subtasks | ❌ |
+| US-009 | Subtasks | ✅ |
 | US-010 | Pet evolution stages | ❌ |

@@ -387,6 +387,9 @@ class CodePetApp(ctk.CTk):
         # Dictionary to store task item widgets
         self.task_widgets = {}
 
+        # Set to track expanded tasks (task IDs)
+        self.expanded_tasks = set()
+
         # Initial load of tasks
         self._refresh_task_list()
 
@@ -396,6 +399,22 @@ class CodePetApp(ctk.CTk):
             "SELECT * FROM tasks WHERE parent_id IS NULL ORDER BY completed ASC, created_at DESC"
         )
         return [dict(row) for row in cursor.fetchall()]
+
+    def _load_subtasks(self, parent_id: int) -> list:
+        """Load subtasks for a given parent task."""
+        cursor = self.db.execute(
+            "SELECT * FROM tasks WHERE parent_id = ? ORDER BY completed ASC, created_at DESC",
+            (parent_id,)
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
+    def _has_subtasks(self, task_id: int) -> bool:
+        """Check if a task has any subtasks."""
+        cursor = self.db.execute(
+            "SELECT COUNT(*) FROM tasks WHERE parent_id = ?",
+            (task_id,)
+        )
+        return cursor.fetchone()[0] > 0
 
     def _refresh_task_list(self):
         """Refresh the task list display."""
@@ -414,14 +433,29 @@ class CodePetApp(ctk.CTk):
             # Hide empty state
             self.empty_state.grid_forget()
 
-            # Create task items
-            for idx, task in enumerate(tasks):
-                task_widget = self._create_task_item(task, idx)
+            # Create task items with subtask support
+            row_idx = 0
+            for task in tasks:
+                task_widget = self._create_task_item(task, row_idx)
                 self.task_widgets[task["id"]] = task_widget
+                row_idx += 1
 
-    def _create_task_item(self, task: dict, row: int) -> ctk.CTkFrame:
+                # If task is expanded, show its subtasks
+                if task["id"] in self.expanded_tasks:
+                    subtasks = self._load_subtasks(task["id"])
+                    for subtask in subtasks:
+                        subtask_widget = self._create_task_item(subtask, row_idx, is_subtask=True)
+                        self.task_widgets[subtask["id"]] = subtask_widget
+                        row_idx += 1
+
+    def _create_task_item(self, task: dict, row: int, is_subtask: bool = False) -> ctk.CTkFrame:
         """Create a task item widget."""
         is_completed = bool(task["completed"])
+        task_id = task["id"]
+        parent_id = task.get("parent_id")
+
+        # Determine indentation for subtasks
+        left_padding = 30 if is_subtask else 0
 
         # Task item frame
         task_frame = ctk.CTkFrame(
@@ -429,8 +463,35 @@ class CodePetApp(ctk.CTk):
             fg_color=("gray85", "gray20") if not is_completed else ("gray80", "gray25"),
             corner_radius=8
         )
-        task_frame.grid(row=row, column=0, pady=5, sticky="ew")
-        task_frame.grid_columnconfigure(1, weight=1)
+        task_frame.grid(row=row, column=0, pady=5, padx=(left_padding, 0), sticky="ew")
+        task_frame.grid_columnconfigure(2, weight=1)  # Title column expands
+
+        # Column index tracker
+        col = 0
+
+        # Expand/collapse button for parent tasks with subtasks
+        if not is_subtask:
+            has_children = self._has_subtasks(task_id)
+            if has_children:
+                is_expanded = task_id in self.expanded_tasks
+                expand_text = "▼" if is_expanded else "▶"
+                expand_btn = ctk.CTkButton(
+                    task_frame,
+                    text=expand_text,
+                    font=ctk.CTkFont(size=12),
+                    text_color=("gray50", "gray60"),
+                    fg_color="transparent",
+                    hover_color=("gray75", "gray30"),
+                    width=25,
+                    height=25,
+                    command=lambda t_id=task_id: self._toggle_task_expand(t_id)
+                )
+                expand_btn.grid(row=0, column=col, padx=(5, 0), pady=10)
+            else:
+                # Spacer for alignment
+                spacer = ctk.CTkLabel(task_frame, text="", width=25)
+                spacer.grid(row=0, column=col, padx=(5, 0), pady=10)
+            col += 1
 
         # Completion toggle button (clickable to toggle completion)
         status_color = "#4CAF50" if is_completed else ("gray60", "gray50")
@@ -446,7 +507,8 @@ class CodePetApp(ctk.CTk):
             height=30,
             command=lambda t=task: self._toggle_task_completion(t)
         )
-        status_btn.grid(row=0, column=0, padx=(10, 5), pady=10)
+        status_btn.grid(row=0, column=col, padx=(5, 5), pady=10)
+        col += 1
 
         # Task title - strikethrough effect for completed tasks
         title_text = task["title"]
@@ -460,12 +522,28 @@ class CodePetApp(ctk.CTk):
             text_color=title_color,
             anchor="w"
         )
-        title_label.grid(row=0, column=1, padx=(0, 10), pady=10, sticky="w")
+        title_label.grid(row=0, column=col, padx=(0, 10), pady=10, sticky="w")
 
         # Apply strikethrough styling for completed tasks using overstrike font
         if is_completed:
             # Create font with overstrike for strikethrough effect
             title_label.configure(font=ctk.CTkFont(size=14, overstrike=True))
+        col += 1
+
+        # Add subtask button (only for parent tasks, not for subtasks)
+        if not is_subtask:
+            add_subtask_btn = ctk.CTkButton(
+                task_frame,
+                text="+",
+                font=ctk.CTkFont(size=14),
+                text_color=("gray50", "gray60"),
+                fg_color="transparent",
+                hover_color=("gray75", "gray30"),
+                width=25,
+                height=25,
+                command=lambda t_id=task_id: self._show_add_subtask_dialog(t_id)
+            )
+            add_subtask_btn.grid(row=0, column=col, padx=(5, 10), pady=10)
 
         return task_frame
 
@@ -487,6 +565,38 @@ class CodePetApp(ctk.CTk):
             (title,)
         )
         self.db.commit()
+        self._refresh_task_list()
+
+    def _toggle_task_expand(self, task_id: int):
+        """Toggle the expanded state of a task."""
+        if task_id in self.expanded_tasks:
+            self.expanded_tasks.remove(task_id)
+        else:
+            self.expanded_tasks.add(task_id)
+        self._refresh_task_list()
+
+    def _show_add_subtask_dialog(self, parent_id: int):
+        """Show dialog for adding a subtask to a parent task."""
+        dialog = ctk.CTkInputDialog(
+            text="Enter subtask title:",
+            title="Add Subtask"
+        )
+        subtask_title = dialog.get_input()
+
+        if subtask_title and subtask_title.strip():
+            self._add_subtask(parent_id, subtask_title.strip())
+
+    def _add_subtask(self, parent_id: int, title: str):
+        """Add a subtask to a parent task and refresh the list."""
+        # Subtasks have half the XP value (5 instead of 10)
+        self.db.execute(
+            "INSERT INTO tasks (title, parent_id, xp_value) VALUES (?, ?, ?)",
+            (title, parent_id, 5)
+        )
+        self.db.commit()
+
+        # Auto-expand the parent task to show the new subtask
+        self.expanded_tasks.add(parent_id)
         self._refresh_task_list()
 
     def _toggle_task_completion(self, task: dict):
