@@ -1,0 +1,18 @@
+# Progress Log
+
+## Learnings
+(Patterns discovered during implementation)
+- CustomTkinter uses `ctk.set_appearance_mode("Dark")` before creating app instance
+- Window config goes in `__init__`: title(), geometry(), minsize()
+- Grid layout configured with `grid_rowconfigure` and `grid_columnconfigure`
+
+---
+
+## Iteration 1 - US-001: Project scaffolding and app window
+- What was implemented: Basic CustomTkinter app structure with 900x700 window, dark theme, title, and minimum size constraints
+- Files changed: main.py (already existed with correct implementation), requirements.txt (dependencies: customtkinter, pillow, platformdirs)
+- Learnings for future iterations:
+  - The initial code was already well-structured following CustomTkinter best practices
+  - Use `ctk.set_appearance_mode()` and `ctk.set_default_color_theme()` before creating the app instance
+  - Grid layout with weight=1 makes content expand to fill window
+---
